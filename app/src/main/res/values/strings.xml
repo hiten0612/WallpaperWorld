@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">WallpaperWorld</string>
+    <string name="wallpaper_world">Wallpaper World</string>
+    <string name="category">Category</string>
+    <string name="recent">Recent</string>
+    <string name="favourite">Favourite</string>
+</resources>
