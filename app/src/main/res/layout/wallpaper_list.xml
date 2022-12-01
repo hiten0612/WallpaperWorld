@@ -32,8 +32,9 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/wallImage"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitXY"
+                    android:layout_height="@dimen/_150sdp"
+                    android:scaleType="centerCrop"
+                    android:adjustViewBounds="true"
                     android:maxHeight="@dimen/_200sdp"
                     app:imageSrc="@{wallpaper.src.original}"
                     app:layout_constraintEnd_toEndOf="parent"

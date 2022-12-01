@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity(), Listeners {
         mAdapter?.addList(cList)
         mAdapter = CategoryAdapter(cList, this)
         binding.rvCategory.adapter = mAdapter
-
+        binding.rvCategory.itemAnimator = null
 
     }
 
