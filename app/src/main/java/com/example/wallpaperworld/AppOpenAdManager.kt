@@ -20,9 +20,6 @@ class AppOpenAdManager {
     private val  LOG_TAG = "AppOpenAdManager"
     private val  AD_UNIT_ID = "ca-app-pub-3940256099942544/3419835294"
 
-
-
-
     interface OnShowAdCompleteListener{
     fun onShowAdComplete()
     }

@@ -1,7 +1,9 @@
 package com.example.wallpaperworld.ui.activities
 
 import android.content.Intent
+import android.media.tv.AdRequest
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
@@ -10,6 +12,11 @@ import com.example.wallpaperworld.adapters.WallPaperListAdapter
 import com.example.wallpaperworld.databinding.ActivityWallPaperBinding
 import com.example.wallpaperworld.models.Photo
 import com.example.wallpaperworld.viewmodels.WallPaperViewModel
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,9 +25,13 @@ class WallPaperActivity : AppCompatActivity(), Listeners {
     private lateinit var binding: ActivityWallPaperBinding
     private var mAdapter: WallPaperListAdapter? = null
     private var wList = ArrayList<Photo>()
+
+    private var mInterstitialAd: InterstitialAd? = null
     private val viewModel by viewModels<WallPaperViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
         binding = ActivityWallPaperBinding.inflate(layoutInflater)
         binding.lifecycleOwner = this
@@ -35,24 +46,25 @@ class WallPaperActivity : AppCompatActivity(), Listeners {
         val imageUrl = intent.extras?.getString("catName")
         viewModel.getImages("563492ad6f91700001000001518da21d798f4f4b86f3b3ebb2e72ebb", imageUrl!!)
 
+        val adRequest= com.google.android.gms.ads.AdRequest.Builder().build()
+        InterstitialAd.load(this,"ca-app-pub-3940256099942544/1033173712",adRequest, object :InterstitialAdLoadCallback(){
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                super.onAdFailedToLoad(adError)
+                Log.e("TAG", adError.toString())
+                mInterstitialAd = null
+            }
+
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                super.onAdLoaded(interstitialAd)
+                Log.e("TAG", "Ad was loaded.")
+                mInterstitialAd = interstitialAd
+            }
+        })
+
+
+
         setObserver()
-
-//
-//        wList.add("https://cdn.pixabay.com/photo/2019/03/15/09/49/girl-4056684_960_720.jpg")
-//        wList.add("https://cdn.pixabay.com/photo/2020/12/15/16/25/clock-5834193__340.jpg")
-//        wList.add("https://cdn.pixabay.com/photo/2020/09/18/19/31/laptop-5582775_960_720.jpg")
-//        wList.add("https://media.istockphoto.com/photos/woman-kayaking-in-fjord-in-norway-picture-id1059380230?b=1&k=6&m=1059380230&s=170667a&w=0&h=kA_A_XrhZJjw2bo5jIJ7089-VktFK0h0I4OWDqaac0c=")
-//        wList.add("https://cdn.pixabay.com/photo/2019/11/05/00/53/cellular-4602489_960_720.jpg")
-//        wList.add("https://cdn.pixabay.com/photo/2017/02/12/10/29/christmas-2059698_960_720.jpg")
-//        wList.add("https://cdn.pixabay.com/photo/2020/01/29/17/09/snowboard-4803050_960_720.jpg")
-//        wList.add("https://cdn.pixabay.com/photo/2020/02/06/20/01/university-library-4825366_960_720.jpg")
-//        wList.add("https://cdn.pixabay.com/photo/2020/11/22/17/28/cat-5767334_960_720.jpg")
-//        wList.add("https://cdn.pixabay.com/photo/2020/12/13/16/22/snow-5828736_960_720.jpg")
-//        wList.add("https://cdn.pixabay.com/photo/2020/12/09/09/27/women-5816861_960_720.jpg")
-
-//        mAdapter?.addList(wList)
-//        mAdapter = WallPaperListAdapter(wList, this)
-//        binding.rvWallpaper.adapter = mAdapter
 
     }
 
@@ -64,11 +76,51 @@ class WallPaperActivity : AppCompatActivity(), Listeners {
 
     override fun onItemClick(position: Int) {
 
-        val passImage = wList[position].src.original
-        val intent = Intent(this@WallPaperActivity, FullScreenActivity::class.java)
-        intent.putExtra("wallImage", passImage)
-        startActivity(intent)
-        Animatoo.animateSlideLeft(this);
+        if (mInterstitialAd != null) {
+            mInterstitialAd?.show(this)
+        } else {
+            Log.d("TAG", "The interstitial ad wasn't ready yet.")
+            val passImage = wList[position].src.original
+            val intent = Intent(this@WallPaperActivity, FullScreenActivity::class.java)
+            intent.putExtra("wallImage", passImage)
+            startActivity(intent)
+            Animatoo.animateSlideLeft(this@WallPaperActivity);
+        }
+        mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+            override fun onAdClicked() {
+                // Called when a click is recorded for an ad.
+                Log.d("TAG", "Ad was clicked.")
+            }
+
+            override fun onAdDismissedFullScreenContent() {
+                // Called when ad is dismissed.
+                Log.d("TAG", "Ad dismissed fullscreen content.")
+                mInterstitialAd = null
+                val passImage = wList[position].src.original
+                val intent = Intent(this@WallPaperActivity, FullScreenActivity::class.java)
+                intent.putExtra("wallImage", passImage)
+                startActivity(intent)
+                Animatoo.animateSlideLeft(this@WallPaperActivity);
+            }
+
+            override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                // Called when ad fails to show.
+                Log.e("TAG", "Ad failed to show fullscreen content.")
+                mInterstitialAd = null
+            }
+
+            override fun onAdImpression() {
+                // Called when an impression is recorded for an ad.
+                Log.d("TAG", "Ad recorded an impression.")
+            }
+
+            override fun onAdShowedFullScreenContent() {
+                // Called when ad is shown.
+                Log.d("TAG", "Ad showed fullscreen content.")
+            }
+        }
+
+
 
     }
 
