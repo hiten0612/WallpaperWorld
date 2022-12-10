@@ -120,12 +120,9 @@ class WallPaperActivity : AppCompatActivity(), Listeners {
             }
         }
 
-
-
     }
 
     private fun setObserver() {
-
         viewModel.response.observe(this) {
             wList = it?.data?.photos as ArrayList<Photo>
             mAdapter?.addList(it.data.photos as ArrayList<Photo>)
@@ -134,4 +131,5 @@ class WallPaperActivity : AppCompatActivity(), Listeners {
 
         }
     }
+
 }

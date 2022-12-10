@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.Environment.DIRECTORY_PICTURES
 import android.transition.Fade
 import android.transition.Transition
 import android.transition.TransitionManager
@@ -72,31 +73,38 @@ class FullScreenActivity : AppCompatActivity() {
             toggle(true)
         }
         binding.cardDownload.setOnClickListener {
+
             downloadImageNew(imageUrl!!)
+
         }
     }
 
 
     private fun downloadImageNew(downloadUrlOfImage: String) {
         try {
+
             val dm = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val downloadUri: Uri = Uri.parse(downloadUrlOfImage)
             val request = DownloadManager.Request(downloadUri)
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
                 .setAllowedOverRoaming(false)
+                .setTitle("Wallpaper World ")
                 .setMimeType("image/jpeg") // Your file type. You can use this code to download other file types also.
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                 .setDestinationInExternalPublicDir(
-                    Environment.DIRECTORY_PICTURES,
-                    File.separator + ".jpg"
+                    DIRECTORY_PICTURES,
+                    File.separator + "Wallpaper World" +
+                            File.separator + ".jpg"
                 )
+
             dm.enqueue(request)
-            Toast.makeText(this,     "Image download started.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Image downloaded.", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Log.e("exce=======", e.message.toString())
             Toast.makeText(this, "Image download failed.", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun toggle(show: Boolean = false) {
 
