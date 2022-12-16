@@ -32,11 +32,13 @@ class WallPaperActivity : AppCompatActivity(), Listeners {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         binding = ActivityWallPaperBinding.inflate(layoutInflater)
         binding.lifecycleOwner = this
 
         setContentView(binding.root)
+        val catName = intent.extras?.getString("catName")
+        binding.catName.text = catName
+
 
         binding.toolbar.setNavigationOnClickListener {
             finish()
@@ -46,26 +48,14 @@ class WallPaperActivity : AppCompatActivity(), Listeners {
         val imageUrl = intent.extras?.getString("catName")
         viewModel.getImages("563492ad6f91700001000001518da21d798f4f4b86f3b3ebb2e72ebb", imageUrl!!)
 
-        val adRequest= com.google.android.gms.ads.AdRequest.Builder().build()
-        InterstitialAd.load(this,"ca-app-pub-3940256099942544/1033173712",adRequest, object :InterstitialAdLoadCallback(){
-
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                super.onAdFailedToLoad(adError)
-                Log.e("TAG", adError.toString())
-                mInterstitialAd = null
-            }
-
-            override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                super.onAdLoaded(interstitialAd)
-                Log.e("TAG", "Ad was loaded.")
-                mInterstitialAd = interstitialAd
-            }
-        })
-
-
-
+        setInterstitialAd()
         setObserver()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setInterstitialAd()
     }
 
 
@@ -78,15 +68,13 @@ class WallPaperActivity : AppCompatActivity(), Listeners {
 
         if (mInterstitialAd != null) {
             mInterstitialAd?.show(this)
-        } else {
-            Log.d("TAG", "The interstitial ad wasn't ready yet.")
-            val passImage = wList[position].src.original
-            val intent = Intent(this@WallPaperActivity, FullScreenActivity::class.java)
-            intent.putExtra("wallImage", passImage)
-            startActivity(intent)
-            Animatoo.animateSlideLeft(this@WallPaperActivity);
         }
-        mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+        else {
+
+            setInterstitialAd()
+
+        }
+        mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
                 // Called when a click is recorded for an ad.
                 Log.d("TAG", "Ad was clicked.")
@@ -130,6 +118,29 @@ class WallPaperActivity : AppCompatActivity(), Listeners {
             binding.rvWallpaper.adapter = mAdapter
 
         }
+    }
+
+    fun setInterstitialAd(){
+
+        val adRequest = com.google.android.gms.ads.AdRequest.Builder().build()
+        InterstitialAd.load(
+            this,
+            "ca-app-pub-3940256099942544/1033173712",
+            adRequest,
+            object : InterstitialAdLoadCallback() {
+
+                override fun onAdFailedToLoad(adError: LoadAdError) {
+                    super.onAdFailedToLoad(adError)
+                    Log.e("TAG", adError.toString())
+                    mInterstitialAd = null
+                }
+
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    super.onAdLoaded(interstitialAd)
+                    Log.e("TAG", "Ad was loaded.")
+                    mInterstitialAd = interstitialAd
+                }
+            })
     }
 
 }

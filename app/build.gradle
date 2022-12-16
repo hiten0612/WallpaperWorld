@@ -113,7 +113,10 @@ dependencies {
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
     implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
 
+    implementation 'com.github.MikeOrtiz:TouchImageView:1.4.1'
 
+    //Picaasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
 
 

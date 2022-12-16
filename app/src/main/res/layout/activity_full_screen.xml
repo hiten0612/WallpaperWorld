@@ -14,15 +14,16 @@
         tools:context=".ui.activities.FullScreenActivity">
 
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.ortiz.touchview.TouchImageView
             android:id="@+id/fullImage"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgBack"
@@ -30,20 +31,19 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/_12sdp"
             android:src="@drawable/ic_back"
-            app:layout_constraintStart_toStartOf="@id/fullImage"
-            app:layout_constraintTop_toTopOf="@+id/fullImage"
-            app:tint="@color/black" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/llBottom"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_30sdp"
+            android:layout_marginBottom="@dimen/_20sdp"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@id/fullImage"
-            app:layout_constraintEnd_toEndOf="@id/fullImage"
-            app:layout_constraintStart_toStartOf="@id/fullImage">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardShare"
@@ -66,37 +66,47 @@
                 android:id="@+id/cardDownload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_10sdp"
+                android:layout_margin="@dimen/_8sdp"
                 android:background="@color/medium_grey"
                 app:cardCornerRadius="@dimen/_24sdp"
                 app:cardElevation="@dimen/_3sdp">
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgDownload"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_download" />
 
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardPreview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_10sdp"
-                android:background="@color/medium_grey"
-                app:cardCornerRadius="@dimen/_24sdp"
-                app:cardElevation="@dimen/_3sdp">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="@dimen/_32sdp"
+                    android:layout_height="@dimen/_32sdp"
+                    android:indeterminateTint="@color/black"
                     android:padding="@dimen/_8sdp"
-                    android:src="@drawable/ic_eye" />
+                    android:visibility="gone"
+                 />
 
 
             </androidx.cardview.widget.CardView>
+
+<!--            <androidx.cardview.widget.CardView-->
+<!--                android:id="@+id/cardPreview"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="@dimen/_10sdp"-->
+<!--                android:background="@color/medium_grey"-->
+<!--                app:cardCornerRadius="@dimen/_24sdp"-->
+<!--                app:cardElevation="@dimen/_3sdp">-->
+
+<!--                <androidx.appcompat.widget.AppCompatImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:padding="@dimen/_8sdp"-->
+<!--                    android:src="@drawable/ic_eye" />-->
+
+
+<!--            </androidx.cardview.widget.CardView>-->
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

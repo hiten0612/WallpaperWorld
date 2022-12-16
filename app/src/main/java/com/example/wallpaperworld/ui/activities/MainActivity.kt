@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity(), Listeners {
         setContentView(binding.root)
 
 
-        cList.add(CategoryModel(1, "https://cdn.pixabay.com/photo/2020/11/22/17/28/cat-5767334_960_720.jpg", "animals"))
+        cList.add(CategoryModel(1, "https://images.pexels.com/photos/10399169/pexels-photo-10399169.jpeg?auto=compress&cs=tinysrgb&w=1600", "animals"))
         cList.add(CategoryModel(2, "https://images.pexels.com/photos/3375116/pexels-photo-3375116.jpeg?auto=compress&cs=tinysrgb&w=1600", "nature"))
         cList.add(CategoryModel(3, "https://images.pexels.com/photos/2116475/pexels-photo-2116475.jpeg?auto=compress&cs=tinysrgb&w=1600", "bike"))
         cList.add(CategoryModel(4, "https://images.pexels.com/photos/1638324/pexels-photo-1638324.jpeg?auto=compress&cs=tinysrgb&w=1600", "gym"))
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity(), Listeners {
         cList.add(CategoryModel(21, "https://images.pexels.com/photos/723023/pexels-photo-723023.jpeg?auto=compress&cs=tinysrgb&w=1600", "caves"))
         cList.add(CategoryModel(22, "https://images.pexels.com/photos/6488410/pexels-photo-6488410.jpeg?auto=compress&cs=tinysrgb&w=1600", "temple"))
         cList.add(CategoryModel(23, "https://images.pexels.com/photos/3622517/pexels-photo-3622517.jpeg?auto=compress&cs=tinysrgb&w=1600", "creative"))
-        cList.add(CategoryModel(24, "https://images.pexels.com/photos/1592384/pexels-photo-1592384.jpeg?auto=compress&cs=tinysrgb&w=1600", "car"))
+        cList.add(CategoryModel(24, "https://images.pexels.com/photos/1545743/pexels-photo-1545743.jpeg?auto=compress&cs=tinysrgb&w=1600", "car"))
         cList.add(CategoryModel(25, "https://images.pexels.com/photos/3045825/pexels-photo-3045825.jpeg?auto=compress&cs=tinysrgb&w=1600", "aesthetic"))
         cList.add(CategoryModel(26, "https://images.pexels.com/photos/325117/pexels-photo-325117.jpeg?auto=compress&cs=tinysrgb&w=1600", "clouds"))
         cList.add(CategoryModel(27, "https://images.pexels.com/photos/1742927/pexels-photo-1742927.jpeg?auto=compress&cs=tinysrgb&w=1600", "street"))
@@ -65,13 +65,12 @@ class MainActivity : AppCompatActivity(), Listeners {
         cList.add(CategoryModel(39, "https://images.pexels.com/photos/4172845/pexels-photo-4172845.jpeg?auto=compress&cs=tinysrgb&w=1600", "adventure"))
         cList.add(CategoryModel(40, "https://images.pexels.com/photos/3362702/pexels-photo-3362702.jpeg?auto=compress&cs=tinysrgb&w=1600", "neon"))
         cList.add(CategoryModel(41, "https://images.pexels.com/photos/675313/pexels-photo-675313.jpeg?auto=compress&cs=tinysrgb&w=1600", "insects"))
-        cList.add(CategoryModel(42, "https://images.pexels.com/photos/675313/pexels-photo-675313.jpeg?auto=compress&cs=tinysrgb&w=1600", "peace"))
-
-
-
-
-
-
+        cList.add(CategoryModel(42, "https://images.pexels.com/photos/312839/pexels-photo-312839.jpeg?auto=compress&cs=tinysrgb&w=1600", "peace"))
+        cList.add(CategoryModel(43, "https://images.pexels.com/photos/3225528/pexels-photo-3225528.jpeg?auto=compress&cs=tinysrgb&w=1600", "village"))
+        cList.add(CategoryModel(44, "https://images.pexels.com/photos/1483064/pexels-photo-1483064.jpeg?auto=compress&cs=tinysrgb&w=1600", "abandoned"))
+        cList.add(CategoryModel(45, "https://images.pexels.com/photos/258347/pexels-photo-258347.jpeg?auto=compress&cs=tinysrgb&w=1600", "trains"))
+        cList.add(CategoryModel(46, "https://images.pexels.com/photos/813011/pexels-photo-813011.jpeg?auto=compress&cs=tinysrgb&w=1600", "cruise"))
+        cList.add(CategoryModel(47, "https://images.pexels.com/photos/5766454/pexels-photo-5766454.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load", "joker"))
 
         mAdapter?.addList(cList)
         mAdapter = CategoryAdapter(cList, this)

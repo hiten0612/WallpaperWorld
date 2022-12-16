@@ -4,4 +4,13 @@
     <string name="category">Category</string>
     <string name="recent">Recent</string>
     <string name="favourite">Favourite</string>
+
+    //Live Ads
+    <string name="interstitial_ad">ca-app-pub-7065049073942644/4902027259</string>
+    <string name="app_open">ca-app-pub-7065049073942644/8593860251</string>
+
+
+    //test ads
+
+
 </resources>
