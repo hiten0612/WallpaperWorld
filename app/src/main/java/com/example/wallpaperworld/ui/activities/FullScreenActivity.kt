@@ -1,6 +1,9 @@
 package com.example.wallpaperworld.ui.activities
 
-import android.Manifest
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
@@ -8,17 +11,17 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
+import android.os.*
+import android.os.Build.VERSION.SDK_INT
 import android.os.Environment.DIRECTORY_PICTURES
-import android.os.Handler
-import android.os.Looper
+import android.provider.Settings
 import android.transition.Fade
 import android.transition.Transition
 import android.transition.TransitionManager
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -49,6 +52,16 @@ class FullScreenActivity : AppCompatActivity() {
 
             .into(binding.fullImage)
 
+        val animatorSet = AnimatorSet()
+        animatorSet.playTogether(
+            ObjectAnimator.ofFloat(binding.imgDevice, "translationY", 500.0f, 0.0f),
+            ObjectAnimator.ofFloat(binding.imgDevice, "alpha", 0.0f, 1.0f),
+            ObjectAnimator.ofFloat(binding.fullImage, "translationY", 500.0f, 0.0f),
+            ObjectAnimator.ofFloat(binding.fullImage, "alpha", 0.0f, 1.0f),
+        )
+        animatorSet.duration = 2000
+        animatorSet.start()
+
         onClick()
 
     }
@@ -76,55 +89,90 @@ class FullScreenActivity : AppCompatActivity() {
 
 
         binding.cardDownload.setOnClickListener {
-//            binding.progressBar.visibility = View.VISIBLE
-//            binding.imgDownload.visibility = View.GONE
-            //  downloadImageNew(imageUrl!!)
 
-            if (Build.VERSION.SDK_INT >= 23) {
-                if (checkPermission()) {
-                    binding.progressBar.visibility = View.VISIBLE
-                    binding.imgDownload.visibility = View.GONE
-                    downloadImageNew(imageUrl!!)
-                } else {
-                    requestPermission()
-                }
-
+            if (checkPermission()) {
+                binding.imgDownload.visibility = View.GONE
+                binding.progressBar.visibility = View.VISIBLE
+                binding.view.visibility = View.VISIBLE
+                binding.downloadProgress.visibility = View.VISIBLE
+                downloadImageNew(imageUrl!!)
+            } else {
+                requestPermission()
             }
-
-//            if (ContextCompat.checkSelfPermission(this@FullScreenActivity,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-//                binding.progressBar.visibility = View.VISIBLE
-//                binding.imgDownload.visibility = View.GONE
-//                downloadImageNew(imageUrl!!)
-//            }
-//            else{
-//
-//                askPermission()
-//            }
-
-            // shareImageFromURI(imageUrl)
         }
     }
 
-//    private fun askPermission(){
-//        ActivityCompat.requestPermissions(this@FullScreenActivity, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),CODE)
-//    }
-//
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<out String>,
-//        grantResults: IntArray
-//    ) {
-//
-//        if (CODE == requestCode){
-//            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-//                downloadImageNew(imageUrl!!)
-//            }
-//            else{
-//                Toast.makeText(this, "Please provide the permission", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//    }
+    private fun checkPermission(): Boolean {
+        return if (SDK_INT >= Build.VERSION_CODES.R) {
+            Environment.isExternalStorageManager()
+        } else {
+            val result =
+                ContextCompat.checkSelfPermission(this@FullScreenActivity, READ_EXTERNAL_STORAGE)
+            val result1 =
+                ContextCompat.checkSelfPermission(this@FullScreenActivity, WRITE_EXTERNAL_STORAGE)
+            result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun requestPermission() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                intent.addCategory("android.intent.category.DEFAULT")
+                intent.data =
+                    Uri.parse(String.format("package:%s", applicationContext.packageName))
+                startActivityForResult(intent, 2296)
+            } catch (e: java.lang.Exception) {
+                val intent = Intent()
+                intent.action = Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+                startActivityForResult(intent, 2296)
+            }
+        } else {
+            //below android 11
+            ActivityCompat.requestPermissions(
+                this@FullScreenActivity,
+                arrayOf(WRITE_EXTERNAL_STORAGE),
+                PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, @Nullable data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 2296) {
+            if (SDK_INT >= Build.VERSION_CODES.R) {
+                if (Environment.isExternalStorageManager()) {
+                    // perform action when allow permission success
+                } else {
+                    Toast.makeText(this, "Allow permission for storage access!", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSION_REQUEST_CODE -> if (grantResults.size > 0) {
+                //val READ_EXTERNAL_STORAGE = grantResults[0] === PackageManager.PERMISSION_GRANTED
+                val WRITE_EXTERNAL_STORAGE = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                if (WRITE_EXTERNAL_STORAGE) {
+                    // perform action when allow permission success
+
+                    Toast.makeText(this, " permission granted", Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    Toast.makeText(this, "permission not granted yet", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+    }
 
 
     private fun downloadImageNew(downloadUrlOfImage: String) {
@@ -146,8 +194,10 @@ class FullScreenActivity : AppCompatActivity() {
             dm.enqueue(request)
             Handler(Looper.getMainLooper()).postDelayed({
                 binding.progressBar.visibility = View.GONE
+                binding.view.visibility = View.GONE
+                binding.downloadProgress.visibility = View.GONE
                 binding.imgDownload.visibility = View.VISIBLE
-            }, 4000)
+            }, 5000)
 
 
 //            Toast.makeText(this, "Image downloaded.", Toast.LENGTH_SHORT).show()
@@ -156,58 +206,58 @@ class FullScreenActivity : AppCompatActivity() {
             Toast.makeText(this, "Image download failed.", Toast.LENGTH_SHORT).show()
         }
     }
+//
+//    fun checkPermission(): Boolean {
+//        val result = ContextCompat.checkSelfPermission(
+//            this@FullScreenActivity,
+//            Manifest.permission.READ_EXTERNAL_STORAGE
+//        )
+//        if (result == PackageManager.PERMISSION_GRANTED) {
+//            return true
+//        } else {
+//            return false
+//        }
+//    }
+//
+//    private fun requestPermission() {
+//        if (ActivityCompat.shouldShowRequestPermissionRationale(
+//                this@FullScreenActivity,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            )
+//        ) {
+//            Toast.makeText(
+//                this@FullScreenActivity,
+//                "Write External Storage permission allows us to save files. Please allow this permission in App Settings.",
+//                Toast.LENGTH_LONG
+//            ).show()
+//        } else {
+//            ActivityCompat.requestPermissions(
+//                this@FullScreenActivity,
+//                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+//                PERMISSION_REQUEST_CODE
+//            )
+//        }
+//    }
+//
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int,
+//        permissions: Array<out String>,
+//        grantResults: IntArray
+//    ) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//
+//        if (requestCode == PERMISSION_REQUEST_CODE) {
+//            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//
+//                Log.e("value", "Permission Granted, Now you can use local drive .");
+//            } else {
+//                Log.e("value", "Permission Denied, You cannot use local drive .");
+//            }
+//        }
+//    }
 
-    fun checkPermission(): Boolean {
-        val result = ContextCompat.checkSelfPermission(
-            this@FullScreenActivity,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-        )
-        if (result == PackageManager.PERMISSION_GRANTED) {
-            return true
-        } else {
-            return false
-        }
-    }
 
-    private fun requestPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(
-                this@FullScreenActivity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-        ) {
-            Toast.makeText(
-                this@FullScreenActivity,
-                "Write External Storage permission allows us to save files. Please allow this permission in App Settings.",
-                Toast.LENGTH_LONG
-            ).show()
-        } else {
-            ActivityCompat.requestPermissions(
-                this@FullScreenActivity,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                PERMISSION_REQUEST_CODE
-            )
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                Log.e("value", "Permission Granted, Now you can use local drive .");
-            } else {
-                Log.e("value", "Permission Denied, You cannot use local drive .");
-            }
-        }
-    }
-
-
-    fun shareImageFromURI(url: String?) {
+    private fun shareImageFromURI(url: String?) {
         Picasso.get().load(url).into(object : com.squareup.picasso.Target {
             override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
                 val intent = Intent(Intent.ACTION_SEND)
@@ -218,7 +268,8 @@ class FullScreenActivity : AppCompatActivity() {
             }
 
             override fun onBitmapFailed(e: java.lang.Exception?, errorDrawable: Drawable?) {
-                TODO("Not yet implemented")
+
+
             }
 
             override fun onPrepareLoad(placeHolderDrawable: Drawable?) {

@@ -13,17 +13,43 @@
         android:layout_height="match_parent"
         tools:context=".ui.activities.FullScreenActivity">
 
+        <!--        <com.ortiz.touchview.TouchImageView-->
+        <!--            android:id="@+id/fullImage"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:gravity="center"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-        <com.ortiz.touchview.TouchImageView
-            android:id="@+id/fullImage"
-            android:layout_width="wrap_content"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/view"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/light_white"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/downloadProgress"
+                android:layout_width="@dimen/_300sdp"
+                android:layout_height="@dimen/_300sdp"
+                android:padding="@dimen/_10sdp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/download" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgBack"
@@ -33,6 +59,30 @@
             android:src="@drawable/ic_back"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imgDevice"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/_50sdp"
+            android:src="@drawable/device_frame"
+            app:layout_constraintBottom_toTopOf="@+id/llBottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgBack" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/fullImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginVertical="@dimen/_20sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            app:layout_constraintBottom_toBottomOf="@+id/imgDevice"
+            app:layout_constraintEnd_toEndOf="@+id/imgDevice"
+            app:layout_constraintStart_toStartOf="@+id/imgDevice"
+            app:layout_constraintTop_toTopOf="@+id/imgDevice" />
+
 
         <LinearLayout
             android:id="@+id/llBottom"
@@ -78,35 +128,35 @@
                     android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_download" />
 
+
                 <ProgressBar
                     android:id="@+id/progress_bar"
                     android:layout_width="@dimen/_32sdp"
                     android:layout_height="@dimen/_32sdp"
                     android:indeterminateTint="@color/black"
                     android:padding="@dimen/_8sdp"
-                    android:visibility="gone"
-                 />
+                    android:visibility="gone" />
 
 
             </androidx.cardview.widget.CardView>
 
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:id="@+id/cardPreview"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_margin="@dimen/_10sdp"-->
-<!--                android:background="@color/medium_grey"-->
-<!--                app:cardCornerRadius="@dimen/_24sdp"-->
-<!--                app:cardElevation="@dimen/_3sdp">-->
+            <!--            <androidx.cardview.widget.CardView-->
+            <!--                android:id="@+id/cardPreview"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_margin="@dimen/_10sdp"-->
+            <!--                android:background="@color/medium_grey"-->
+            <!--                app:cardCornerRadius="@dimen/_24sdp"-->
+            <!--                app:cardElevation="@dimen/_3sdp">-->
 
-<!--                <androidx.appcompat.widget.AppCompatImageView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:padding="@dimen/_8sdp"-->
-<!--                    android:src="@drawable/ic_eye" />-->
+            <!--                <androidx.appcompat.widget.AppCompatImageView-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:padding="@dimen/_8sdp"-->
+            <!--                    android:src="@drawable/ic_eye" />-->
 
 
-<!--            </androidx.cardview.widget.CardView>-->
+            <!--            </androidx.cardview.widget.CardView>-->
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
